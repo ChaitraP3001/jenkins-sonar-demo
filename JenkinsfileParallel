@@ -11,24 +11,33 @@ pipeline {
             }    
         }
         stage('Build'){
-            parallel{
             steps{
                 echo 'Building Maven project'
                 sh 'mvn clean compile'
             }
-      
-            steps{
-                echo 'Scanning Maven project'
-                withCredentials([string(credentialsId: 'testToken', variable: 'SONAR_TOKEN')]) {
-                    withSonarQubeEnv(installationName: 'sonarcloud', credentialsId: 'testToken') { 
-                        sh 'mvn sonar:sonar -Dsonar.projectKey=forsl -Dsonar.organization=testsonarch -Dsonar.host.url=https://sonarcloud.io'
-                        sh 'sleep 50'
-                        
+        }
+        stage('SonarQube Analysis'){
+            parallel{
+                   stage('Analysis'){
+                    steps{
+                        echo 'Scanning Maven project'
+                        withCredentials([string(credentialsId: 'testToken', variable: 'SONAR_TOKEN')]) {
+                            withSonarQubeEnv(installationName: 'sonarcloud', credentialsId: 'testToken') { 
+                                sh 'mvn sonar:sonar -Dsonar.projectKey=forsl -Dsonar.organization=testsonarch -Dsonar.host.url=https://sonarcloud.io'
+                                sh 'sleep 50'
+                                
+                            }
+                        }    
                     }
-                }    
+                  
+                }  
+                stage ('Regression'){
+                    steps{
+                        echo 'Regression'
+                    } 
+              }
             }
         }
-    }
         stage('Test'){
             steps{
                 echo 'Building Maven project'
@@ -37,6 +46,7 @@ pipeline {
                 jacoco classPattern: '**/target/classes', exclusionPattern: '**/*Test*.class', execPattern: '**/target/jacoco.exec', inclusionPattern: '**/*.class', sourceExclusionPattern: 'generated/**/*.java', sourceInclusionPattern: '**/*.java'
             }
         }
+        
     }
         
 
