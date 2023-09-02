@@ -21,7 +21,7 @@ pipeline {
                 echo 'Scanning Maven project'
                 withCredentials([string(credentialsId: 'testToken', variable: 'SONAR_TOKEN')]) {
                     withSonarQubeEnv(installationName: 'sonarcloud', credentialsId: 'testToken') { 
-                        sh 'mvn sonar:sonar -Dsonar.projectKey=sonardemo -Dsonar.organization=TestSonarCh -Dsonar.host.url=https://sonarcloud.io'
+                        sh 'mvn sonar:sonar -Dsonar.projectKey=sonardemo -Dsonar.organization=testsonarch -Dsonar.host.url=https://sonarcloud.io'
                         sh 'sleep 50'
                         
                     }
