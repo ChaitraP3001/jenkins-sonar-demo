@@ -11,6 +11,7 @@ pipeline {
             }    
         }
         stage('Build'){
+            parallel{
             steps{
                 echo 'Building Maven project'
                 sh 'mvn clean compile'
@@ -27,6 +28,7 @@ pipeline {
                 }    
             }
         }
+    }
         stage('Test'){
             steps{
                 echo 'Building Maven project'
