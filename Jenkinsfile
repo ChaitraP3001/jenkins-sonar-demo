@@ -7,7 +7,7 @@ pipeline {
         
         stage('checkout'){
             steps{
-                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vcjain/jenkins_pipeline_springboot_demo.git']])
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/ChaitraP3001/jenkins-sonar-demo.git']])
             }    
         }
         stage('Build'){
@@ -19,9 +19,9 @@ pipeline {
         stage('SonarQube Analysis'){
             steps{
                 echo 'Scanning Maven project'
-                withCredentials([string(credentialsId: 'sonarqube-token', variable: 'testToken')]) {
-                    withSonarQubeEnv(installationName: 'sonarcloud', credentialsId: 'sonarqube-token') { 
-                        sh 'mvn sonar:sonar -Dsonar.projectKey=sonardemo -Dsonar.organization=vcjain -Dsonar.host.url=https://sonarcloud.io'
+                withCredentials([string(credentialsId: 'testToken', variable: 'SONAR_TOKEN')]) {
+                    withSonarQubeEnv(installationName: 'sonarcloud', credentialsId: 'testToken') { 
+                        sh 'mvn sonar:sonar -Dsonar.projectKey=sonardemo -Dsonar.organization=TestSonarCh -Dsonar.host.url=https://sonarcloud.io'
                         sh 'sleep 50'
                         
                     }
